@@ -52,16 +52,23 @@ const styles = StyleSheet.create({
   separator: {
     height: 10,
   },
+  container: {
+    flexGrow: 1,
+    flexShrink: 1,
+    backgroundColor: theme.colors.bgMain,
+  },
 });
 
 const ItemSeparator = () => <View style={styles.separator} />;
 
 export const RepositoryList = () => {
   return (
-    <FlatList
-      data={repositories}
-      ItemSeparatorComponent={ItemSeparator}
-      renderItem={({ item }) => <RepositoryItem item={item} />}
-    />
+    <View style={styles.container}>
+      <FlatList
+        data={repositories}
+        ItemSeparatorComponent={ItemSeparator}
+        renderItem={({ item }) => <RepositoryItem item={item} />}
+      />
+    </View>
   );
 };

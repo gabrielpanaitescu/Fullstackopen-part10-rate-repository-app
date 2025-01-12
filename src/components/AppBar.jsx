@@ -1,7 +1,7 @@
-import { View, StyleSheet, StatusBar, Pressable } from "react-native";
-import Constants from "expo-constants";
+import { View, StyleSheet, StatusBar, ScrollView } from "react-native";
 import { Text } from "./Text";
 import theme from "../theme";
+import { Link } from "react-router-native";
 
 const styles = StyleSheet.create({
   container: {
@@ -10,24 +10,41 @@ const styles = StyleSheet.create({
     paddingBottom: 24,
     paddingHorizontal: 12,
   },
-  header: {
+  tabText: {
     color: "white",
   },
+  scrollViewContainer: {
+    flexDirection: "row",
+    gap: 14,
+  },
 });
+
+const TabText = ({ title }) => {
+  return (
+    <Text
+      color="textPrimary"
+      fontSize="subheading"
+      fontWeight="bold"
+      style={styles.tabText}
+    >
+      {title}
+    </Text>
+  );
+};
 
 export const AppBar = () => {
   return (
     <View style={styles.container}>
-      <Pressable>
-        <Text
-          color="textPrimary"
-          fontSize="subheading"
-          fontWeight="bold"
-          style={styles.header}
-        >
-          Repositories
-        </Text>
-      </Pressable>
+      <ScrollView horizontal>
+        <View style={styles.scrollViewContainer}>
+          <Link to={"/"}>
+            <TabText title="Repositories" />
+          </Link>
+          <Link to={"/signin"}>
+            <TabText title="Sign In" />
+          </Link>
+        </View>
+      </ScrollView>
     </View>
   );
 };
