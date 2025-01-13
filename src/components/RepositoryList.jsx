@@ -1,7 +1,6 @@
 import { FlatList, View, StyleSheet } from "react-native";
 import { RepositoryItem } from "./RepositoryItem";
 import theme from "../theme";
-import { BmiCalculator } from "./BmiCalculator";
 
 const repositories = [
   {
@@ -71,7 +70,6 @@ export const RepositoryList = () => {
         ItemSeparatorComponent={ItemSeparator}
         renderItem={({ item }) => <RepositoryItem item={item} />}
       />
-      <BmiCalculator />
     </View>
   );
 };
