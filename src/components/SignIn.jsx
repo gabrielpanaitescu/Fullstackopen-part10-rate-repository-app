@@ -30,7 +30,7 @@ const validationSchema = yup.object().shape({
   password: yup.string().required(),
 });
 
-export const SignIn = () => {
+const SignIn = () => {
   const formik = useFormik({
     initialValues: {
       username: "",
@@ -87,3 +87,5 @@ export const SignIn = () => {
     </View>
   );
 };
+
+export default SignIn;

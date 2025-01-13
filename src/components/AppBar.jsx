@@ -32,7 +32,7 @@ const TabText = ({ title }) => {
   );
 };
 
-export const AppBar = () => {
+const AppBar = () => {
   return (
     <View style={styles.container}>
       <ScrollView horizontal>
@@ -48,3 +48,5 @@ export const AppBar = () => {
     </View>
   );
 };
+
+export default AppBar;
