@@ -3,8 +3,9 @@ import { Text } from "./Text";
 import { Pressable, StyleSheet, TextInput, View } from "react-native";
 import theme from "../theme";
 import * as yup from "yup";
-import useSignin from "../hooks/useSignin";
+
 import { useNavigate } from "react-router-native";
+import { useAuth } from "../hooks/useAuth";
 
 const styles = StyleSheet.create({
   container: {
@@ -33,7 +34,7 @@ const validationSchema = yup.object().shape({
 });
 
 const SignIn = () => {
-  const [signIn, result] = useSignin();
+  const { signIn } = useAuth();
   const navigate = useNavigate();
 
   const formik = useFormik({
@@ -46,7 +47,6 @@ const SignIn = () => {
 
       try {
         const { data } = await signIn({ username, password });
-        console.log("data", data);
 
         navigate("/");
       } catch (error) {
