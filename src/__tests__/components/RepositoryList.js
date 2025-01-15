@@ -51,7 +51,6 @@ describe("RepositoryList", () => {
 
       render(<RepositoryListContainer repositories={repositories} />);
       const repositoriesByTestID = screen.getAllByTestId("repositoryItem");
-      screen.debug();
 
       const [firstRepository, secondRepository] = repositoriesByTestID;
 
