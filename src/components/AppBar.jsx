@@ -47,6 +47,8 @@ const AppBar = () => {
 
   if (loading) return null;
 
+  const currentUser = data?.me;
+
   return (
     <View style={styles.container}>
       <ScrollView horizontal>
@@ -54,7 +56,7 @@ const AppBar = () => {
           <Link to={"/"}>
             <TabText title="Repositories" />
           </Link>
-          {!data.me ? (
+          {!currentUser ? (
             <Link to={"/signin"}>
               <TabText title="Sign In" />
             </Link>

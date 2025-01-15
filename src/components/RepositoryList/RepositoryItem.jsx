@@ -1,6 +1,7 @@
 import { StyleSheet, View, Image } from "react-native";
 import { Text } from "../Text";
 import theme from "../../theme";
+import { decimalTransform } from "../../utils/decimalTransform";
 
 const styles = StyleSheet.create({
   avatar: {
@@ -39,28 +40,22 @@ const styles = StyleSheet.create({
   },
 });
 
-const StatContainer = ({ title, stat }) => {
+const StatContainer = ({ title, stat, ...props }) => {
   return (
     <View style={styles.statContainer}>
-      <Text fontWeight="bold">{stat}</Text>
-      <Text color="textSecondary">{title}</Text>
+      <Text fontWeight="bold" {...props}>
+        {stat}
+      </Text>
+      <Text color="textSecondary" {...props}>
+        {title}
+      </Text>
     </View>
   );
 };
 
 export const RepositoryItem = ({ item }) => {
-  const decimalTransform = (string) => {
-    const number = Number(string);
-
-    if (number > 1000) {
-      return (number / 1000).toFixed(1) + "k";
-    } else {
-      return string;
-    }
-  };
-
   return (
-    <View style={styles.container}>
+    <View style={styles.container} testID="repositoryItem">
       <View style={styles.rowContainer}>
         <Image
           style={styles.avatar}
@@ -69,7 +64,7 @@ export const RepositoryItem = ({ item }) => {
           }}
         />
         <View style={styles.descriptionContainer}>
-          <Text fontWeight="bold">{item.fullName}</Text>
+          <Text fontWeight="bold">{item.fullName} </Text>
           <Text color="textSecondary">{item.description}</Text>
           <Text style={styles.languageText}>{item.language}</Text>
         </View>

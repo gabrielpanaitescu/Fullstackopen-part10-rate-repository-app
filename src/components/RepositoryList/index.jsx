@@ -5,8 +5,6 @@ import { Text } from "../Text";
 import useRepositories, {
   useRepositoriesGQL,
 } from "../../hooks/useRepositories";
-import { useQuery } from "@apollo/client";
-import { GET_REPOSITORIES } from "../../graphql/queries";
 
 const styles = StyleSheet.create({
   separator: {
@@ -21,9 +19,7 @@ const styles = StyleSheet.create({
 
 const ItemSeparator = () => <View style={styles.separator} />;
 
-const RepositoryList = () => {
-  const { repositories } = useRepositoriesGQL();
-
+export const RepositoryListContainer = ({ repositories }) => {
   const repositoryNodes = repositories
     ? repositories.edges.map((edge) => edge.node)
     : [];
@@ -34,10 +30,16 @@ const RepositoryList = () => {
         data={repositoryNodes}
         ItemSeparatorComponent={ItemSeparator}
         renderItem={({ item }) => <RepositoryItem item={item} />}
-        ListEmptyComponent={<Text>No data to display</Text>}
+        ListEmptyComponent={<Text>Loading data...</Text>}
       />
     </View>
   );
+};
+
+const RepositoryList = () => {
+  const { repositories } = useRepositoriesGQL();
+
+  return <RepositoryListContainer repositories={repositories} />;
 };
 
 export default RepositoryList;
