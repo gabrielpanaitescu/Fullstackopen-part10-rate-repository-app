@@ -5,7 +5,7 @@ import {
   ScrollView,
   Pressable,
 } from "react-native";
-import { Text } from "./Text";
+import { Text } from "./ui/Text";
 import theme from "../theme";
 import { Link } from "react-router-native";
 import { useQuery } from "@apollo/client";

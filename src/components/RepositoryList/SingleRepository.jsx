@@ -1,0 +1,85 @@
+import { useQuery } from "@apollo/client";
+import { GET_REPOSITORY_BY } from "../../graphql/queries";
+import { useParams } from "react-router-native";
+import * as Linking from "expo-linking";
+import { RepositoryInfo } from "./RepositoryItem";
+import { FlatList, Pressable, StyleSheet, View } from "react-native";
+import { Text } from "../ui/Text";
+import theme from "../../theme";
+import ReviewItem from "./ReviewItem";
+import ItemSeparator from "../ui/ItemSeparator";
+
+const styles = StyleSheet.create({
+  openUrlText: {
+    color: "white",
+    textAlign: "center",
+    gap: 10,
+  },
+  pressableContainer: {
+    backgroundColor: "white",
+    paddingBottom: 6,
+  },
+  openUrlPressable: {
+    paddingVertical: 14,
+    backgroundColor: theme.colors.primary,
+    borderRadius: theme.borderRadius.general,
+    marginHorizontal: 14,
+  },
+  mainContainer: {
+    flexGrow: 1,
+    flexShrink: 1,
+    backgroundColor: theme.colors.bgMain,
+  },
+  marginToReview: {
+    marginBottom: 10,
+  },
+});
+
+const SingleRepository = () => {
+  const params = useParams();
+  const id = params.id ? params.id : null;
+
+  const { data, loading } = useQuery(GET_REPOSITORY_BY, {
+    variables: {
+      id,
+    },
+    onError(e) {
+      console.log(e);
+    },
+  });
+
+  if (loading) return null;
+
+  const repository = data?.repository;
+
+  const reviews = data?.repository.reviews.edges.map((edge) => edge.node);
+
+  const onOpenUrl = () => {
+    Linking.openURL(repository.url);
+  };
+
+  return (
+    <View style={styles.mainContainer}>
+      <FlatList
+        ItemSeparatorComponent={<ItemSeparator />}
+        data={reviews}
+        renderItem={({ item }) => <ReviewItem review={item} />}
+        keyExtractor={(item) => item.id}
+        ListHeaderComponent={
+          <View style={styles.marginToReview}>
+            <RepositoryInfo repository={repository} />
+            <View style={styles.pressableContainer}>
+              <Pressable onPress={onOpenUrl} style={styles.openUrlPressable}>
+                <Text fontWeight="bold" style={styles.openUrlText}>
+                  Open in GitHub
+                </Text>
+              </Pressable>
+            </View>
+          </View>
+        }
+      />
+    </View>
+  );
+};
+
+export default SingleRepository;

@@ -1,5 +1,5 @@
 import { useFormik } from "formik";
-import { Text } from "./Text";
+import { Text } from "./ui/Text";
 import { Pressable, StyleSheet, TextInput, View } from "react-native";
 import theme from "../theme";
 import * as yup from "yup";
@@ -9,6 +9,7 @@ import { useAuth } from "../hooks/useAuth";
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: "white",
     padding: 14,
     gap: 10,
   },
@@ -16,15 +17,19 @@ const styles = StyleSheet.create({
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: "#333",
     paddingHorizontal: 10,
+    borderRadius: theme.borderRadius.general,
   },
   submitText: {
-    backgroundColor: theme.colors.primary,
     textAlign: "center",
-    paddingVertical: 18,
     color: "white",
   },
   borderColorError: {
     borderColor: theme.colors.error,
+  },
+  pressable: {
+    borderRadius: theme.borderRadius.general,
+    backgroundColor: theme.colors.primary,
+    paddingVertical: 14,
   },
 });
 
@@ -82,7 +87,7 @@ export const SignInForm = ({ onSignIn }) => {
           {formik.errors.password}
         </Text>
       )}
-      <Pressable onPress={formik.handleSubmit}>
+      <Pressable onPress={formik.handleSubmit} style={styles.pressable}>
         <Text fontWeight="bold" style={styles.submitText}>
           Sign in
         </Text>

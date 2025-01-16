@@ -1,17 +1,13 @@
-import { StyleSheet, View, Image, Pressable } from "react-native";
-import { Text } from "../Text";
+import { StyleSheet, View, Image } from "react-native";
+import { Text } from "../ui/Text";
 import theme from "../../theme";
 import { decimalTransform } from "../../utils/decimalTransform";
-import { useQuery } from "@apollo/client";
-import { GET_REPOSITORY_BY } from "../../graphql/queries";
-import { useParams } from "react-router-native";
-import * as Linking from "expo-linking";
 
 const styles = StyleSheet.create({
   avatar: {
     width: 50,
     height: 50,
-    borderRadius: 4,
+    borderRadius: theme.borderRadius.general,
   },
   container: {
     backgroundColor: "white",
@@ -31,7 +27,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 4,
     color: "white",
-    borderRadius: 4,
+    borderRadius: theme.borderRadius.general,
     textAlign: "center",
   },
   statGroupContainer: {
@@ -45,7 +41,7 @@ const styles = StyleSheet.create({
   openUrlContainer: {
     backgroundColor: theme.colors.primary,
     paddingVertical: 18,
-    borderRadius: 4,
+    borderRadius: theme.borderRadius.general,
   },
   openUrlText: {
     color: "white",
@@ -66,72 +62,82 @@ const StatContainer = ({ title, stat, ...props }) => {
   );
 };
 
-export const RepositoryItem = ({ item, altView }) => {
-  const params = useParams();
-  const id = params.id ? params.id : null;
-
-  const { data, loading } = useQuery(GET_REPOSITORY_BY, {
-    variables: {
-      id,
-    },
-    skip: !Boolean(altView),
-    onError(e) {
-      console.log(e);
-    },
-  });
-
-  if (loading) return null;
-
-  const itemToRender = altView ? data.repository : item;
-
-  const onOpenUrl = () => {
-    if (!altView) return null;
-
-    Linking.openURL(itemToRender.url);
-  };
-
+export const RepositoryInfo = ({ repository }) => {
   return (
     <View style={styles.container} testID="repositoryItem">
       <View style={styles.rowContainer}>
         <Image
           style={styles.avatar}
           source={{
-            uri: itemToRender.ownerAvatarUrl,
+            uri: repository.ownerAvatarUrl,
           }}
         />
         <View style={styles.descriptionContainer}>
-          <Text fontWeight="bold">{itemToRender.fullName} </Text>
-          <Text color="textSecondary">{itemToRender.description}</Text>
-          <Text style={styles.languageText}>{itemToRender.language}</Text>
+          <Text fontWeight="bold">{repository.fullName} </Text>
+          <Text color="textSecondary">{repository.description}</Text>
+          <Text style={styles.languageText}>{repository.language}</Text>
         </View>
       </View>
 
       <View style={styles.statGroupContainer}>
         <StatContainer
           title={"Stars"}
-          stat={decimalTransform(itemToRender.stargazersCount)}
+          stat={decimalTransform(repository.stargazersCount)}
         />
         <StatContainer
           title={"Forks"}
-          stat={decimalTransform(itemToRender.forksCount)}
+          stat={decimalTransform(repository.forksCount)}
         />
 
         <StatContainer
           title={"Reviews"}
-          stat={decimalTransform(itemToRender.reviewCount)}
+          stat={decimalTransform(repository.reviewCount)}
         />
         <StatContainer
           title={"Rating"}
-          stat={decimalTransform(itemToRender.ratingAverage)}
+          stat={decimalTransform(repository.ratingAverage)}
         />
       </View>
-      {altView && (
-        <Pressable onPress={onOpenUrl} style={styles.openUrlContainer}>
-          <Text fontWeight="bold" style={styles.openUrlText}>
-            Open in GitHub
-          </Text>
-        </Pressable>
-      )}
+    </View>
+  );
+};
+
+export const RepositoryItem = ({ item }) => {
+  return (
+    <View style={styles.container} testID="repositoryItem">
+      <View style={styles.rowContainer}>
+        <Image
+          style={styles.avatar}
+          source={{
+            uri: item.ownerAvatarUrl,
+          }}
+        />
+        <View style={styles.descriptionContainer}>
+          <Text fontWeight="bold">{item.fullName} </Text>
+          <Text color="textSecondary">{item.description}</Text>
+          <Text style={styles.languageText}>{item.language}</Text>
+        </View>
+      </View>
+
+      <View style={styles.statGroupContainer}>
+        <StatContainer
+          title={"Stars"}
+          stat={decimalTransform(item.stargazersCount)}
+        />
+        <StatContainer
+          title={"Forks"}
+          stat={decimalTransform(item.forksCount)}
+        />
+
+        <StatContainer
+          title={"Reviews"}
+          stat={decimalTransform(item.reviewCount)}
+        />
+        <StatContainer
+          title={"Rating"}
+          stat={decimalTransform(item.ratingAverage)}
+        />
+      </View>
     </View>
   );
 };

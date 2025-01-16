@@ -1,13 +1,24 @@
 import { gql } from "@apollo/client";
-import { RepositoryFragment } from "./fragments";
+import { RepositoryFragment, ReviewFragment } from "./fragments";
 
 export const GET_REPOSITORY_BY = gql`
   query GetRepositoryBy($id: ID!) {
     repository(id: $id) {
       ...RepositoryFragment
+      reviews {
+        edges {
+          node {
+            ...ReviewFragment
+            user {
+              id
+              username
+            }
+          }
+        }
+      }
     }
   }
-
+  ${ReviewFragment}
   ${RepositoryFragment}
 `;
 
