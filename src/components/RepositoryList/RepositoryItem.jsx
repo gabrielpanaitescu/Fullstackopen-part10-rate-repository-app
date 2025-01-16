@@ -1,7 +1,11 @@
-import { StyleSheet, View, Image } from "react-native";
+import { StyleSheet, View, Image, Pressable } from "react-native";
 import { Text } from "../Text";
 import theme from "../../theme";
 import { decimalTransform } from "../../utils/decimalTransform";
+import { useQuery } from "@apollo/client";
+import { GET_REPOSITORY_BY } from "../../graphql/queries";
+import { useParams } from "react-router-native";
+import * as Linking from "expo-linking";
 
 const styles = StyleSheet.create({
   avatar: {
@@ -38,6 +42,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 4,
   },
+  openUrlContainer: {
+    backgroundColor: theme.colors.primary,
+    paddingVertical: 18,
+    borderRadius: 4,
+  },
+  openUrlText: {
+    color: "white",
+    textAlign: "center",
+  },
 });
 
 const StatContainer = ({ title, stat, ...props }) => {
@@ -53,42 +66,72 @@ const StatContainer = ({ title, stat, ...props }) => {
   );
 };
 
-export const RepositoryItem = ({ item }) => {
+export const RepositoryItem = ({ item, altView }) => {
+  const params = useParams();
+  const id = params.id ? params.id : null;
+
+  const { data, loading } = useQuery(GET_REPOSITORY_BY, {
+    variables: {
+      id,
+    },
+    skip: !Boolean(altView),
+    onError(e) {
+      console.log(e);
+    },
+  });
+
+  if (loading) return null;
+
+  const itemToRender = altView ? data.repository : item;
+
+  const onOpenUrl = () => {
+    if (!altView) return null;
+
+    Linking.openURL(itemToRender.url);
+  };
+
   return (
     <View style={styles.container} testID="repositoryItem">
       <View style={styles.rowContainer}>
         <Image
           style={styles.avatar}
           source={{
-            uri: item.ownerAvatarUrl,
+            uri: itemToRender.ownerAvatarUrl,
           }}
         />
         <View style={styles.descriptionContainer}>
-          <Text fontWeight="bold">{item.fullName} </Text>
-          <Text color="textSecondary">{item.description}</Text>
-          <Text style={styles.languageText}>{item.language}</Text>
+          <Text fontWeight="bold">{itemToRender.fullName} </Text>
+          <Text color="textSecondary">{itemToRender.description}</Text>
+          <Text style={styles.languageText}>{itemToRender.language}</Text>
         </View>
       </View>
 
       <View style={styles.statGroupContainer}>
         <StatContainer
           title={"Stars"}
-          stat={decimalTransform(item.stargazersCount)}
+          stat={decimalTransform(itemToRender.stargazersCount)}
         />
         <StatContainer
           title={"Forks"}
-          stat={decimalTransform(item.forksCount)}
+          stat={decimalTransform(itemToRender.forksCount)}
         />
 
         <StatContainer
           title={"Reviews"}
-          stat={decimalTransform(item.reviewCount)}
+          stat={decimalTransform(itemToRender.reviewCount)}
         />
         <StatContainer
           title={"Rating"}
-          stat={decimalTransform(item.ratingAverage)}
+          stat={decimalTransform(itemToRender.ratingAverage)}
         />
       </View>
+      {altView && (
+        <Pressable onPress={onOpenUrl} style={styles.openUrlContainer}>
+          <Text fontWeight="bold" style={styles.openUrlText}>
+            Open in GitHub
+          </Text>
+        </Pressable>
+      )}
     </View>
   );
 };

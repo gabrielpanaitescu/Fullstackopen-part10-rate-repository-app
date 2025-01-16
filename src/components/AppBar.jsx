@@ -53,11 +53,11 @@ const AppBar = () => {
     <View style={styles.container}>
       <ScrollView horizontal>
         <View style={styles.scrollViewContainer}>
-          <Link to={"/"}>
+          <Link to="/">
             <TabText title="Repositories" />
           </Link>
           {!currentUser ? (
-            <Link to={"/signin"}>
+            <Link to="/signin">
               <TabText title="Sign In" />
             </Link>
           ) : (
