@@ -62,9 +62,14 @@ const AppBar = () => {
             </Link>
           )}
           {!currentUser ? (
-            <Link to="/signin">
-              <TabText title="Sign In" />
-            </Link>
+            <>
+              <Link to="/signin">
+                <TabText title="Sign In" />
+              </Link>
+              <Link to="/signup">
+                <TabText title="Sign Up" />
+              </Link>
+            </>
           ) : (
             <Pressable
               onPress={signOut}

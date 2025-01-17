@@ -26,45 +26,49 @@ export const SignInForm = ({ onSignIn }) => {
     validationSchema,
   });
 
-  const checkUsernameValidation =
+  const usernameValidationError =
     formik.touched.username && formik.errors.username;
 
-  const checkPasswordValidation =
+  const passwordValidationError =
     formik.touched.password && formik.errors.password;
 
   return (
     <View style={styles.container}>
-      <TextInput
-        style={[
-          styles.textInput,
-          checkUsernameValidation && styles.errorBorder,
-        ]}
-        placeholder="Username"
-        value={formik.values.username}
-        onChangeText={formik.handleChange("username")}
-        onBlur={formik.handleBlur("username")}
-      />
-      {checkUsernameValidation && (
-        <Text style={{ color: theme.colors.error }}>
-          {formik.errors.username}
-        </Text>
-      )}
-      <TextInput
-        style={[
-          styles.textInput,
-          checkPasswordValidation && styles.errorBorder,
-        ]}
-        secureTextEntry
-        placeholder="Password"
-        value={formik.values.password}
-        onChangeText={formik.handleChange("password")}
-        onBlur={formik.handleBlur("password")}
-      />
-      {checkPasswordValidation && (
-        <Text style={{ color: theme.colors.error }}>
-          {formik.errors.password}
-        </Text>
-      )}
+      <View>
+        <TextInput
+          style={[
+            styles.textInput,
+            usernameValidationError && styles.errorBorder,
+          ]}
+          placeholder="Username"
+          value={formik.values.username}
+          onChangeText={formik.handleChange("username")}
+          onBlur={formik.handleBlur("username")}
+        />
+        {usernameValidationError && (
+          <Text style={{ color: theme.colors.error }}>
+            {formik.errors.username}
+          </Text>
+        )}
+      </View>
+      <View>
+        <TextInput
+          style={[
+            styles.textInput,
+            passwordValidationError && styles.errorBorder,
+          ]}
+          secureTextEntry
+          placeholder="Password"
+          value={formik.values.password}
+          onChangeText={formik.handleChange("password")}
+          onBlur={formik.handleBlur("password")}
+        />
+        {passwordValidationError && (
+          <Text style={{ color: theme.colors.error }}>
+            {formik.errors.password}
+          </Text>
+        )}
+      </View>
       <Pressable onPress={formik.handleSubmit} style={styles.submitPressable}>
         <Text fontWeight="bold" style={styles.submitText}>
           Sign in
@@ -83,7 +87,6 @@ const SignIn = () => {
 
     try {
       const { data } = await signIn({ username, password });
-      navigate("/");
 
       return data;
     } catch (error) {

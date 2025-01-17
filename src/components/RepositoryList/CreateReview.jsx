@@ -7,7 +7,7 @@ import { useMutation } from "@apollo/client";
 import { CREATE_REVIEW } from "../../graphql/mutations";
 import { useNavigate } from "react-router-native";
 
-const CreateReviewForm = ({ createReviewMutation }) => {
+export const CreateReviewForm = ({ onCreateReview }) => {
   const formik = useFormik({
     initialValues: {
       ownerName: "",
@@ -16,8 +16,10 @@ const CreateReviewForm = ({ createReviewMutation }) => {
       text: "",
     },
     validationSchema: yup.object({
-      ownerName: yup.string().required("Owner's name is required"),
-      repositoryName: yup.string().required("Repository's name is required"),
+      ownerName: yup.string().required("owner's name is a required field"),
+      repositoryName: yup
+        .string()
+        .required("repository's name is a required field"),
       rating: yup
         .number()
         .required()
@@ -27,20 +29,21 @@ const CreateReviewForm = ({ createReviewMutation }) => {
       text: yup.string(),
     }),
     onSubmit: (values) => {
-      createReviewMutation({
-        variables: {
-          review: { ...values, rating: Number(values.rating) },
-        },
-      });
+      const review = {
+        ...values,
+        rating: Number(values.rating),
+      };
+
+      onCreateReview(review);
     },
   });
 
-  const checkOwnerNameValidation =
+  const ownerNameValidationError =
     formik.touched.ownerName && formik.errors.ownerName;
-  const checkRepositoryNameValidation =
+  const repositoryNameValidationError =
     formik.touched.repositoryName && formik.errors.repositoryName;
-  const checkRatingValidation = formik.touched.rating && formik.errors.rating;
-  const checkTextValidation = formik.touched.text && formik.errors.text;
+  const ratingValidationError = formik.touched.rating && formik.errors.rating;
+  const textValidationError = formik.touched.text && formik.errors.text;
 
   return (
     <View style={styles.container}>
@@ -49,13 +52,13 @@ const CreateReviewForm = ({ createReviewMutation }) => {
           placeholder="Repository owner name"
           style={[
             styles.textInput,
-            checkOwnerNameValidation && styles.errorBorder,
+            ownerNameValidationError && styles.errorBorder,
           ]}
           value={formik.values.ownerName}
           onChangeText={formik.handleChange("ownerName")}
           onBlur={formik.handleBlur("ownerName")}
         />
-        {checkOwnerNameValidation && (
+        {ownerNameValidationError && (
           <Text style={{ color: theme.colors.error }}>
             {formik.errors.ownerName}
           </Text>
@@ -66,13 +69,13 @@ const CreateReviewForm = ({ createReviewMutation }) => {
           placeholder="Repository name"
           style={[
             styles.textInput,
-            checkRepositoryNameValidation && styles.errorBorder,
+            repositoryNameValidationError && styles.errorBorder,
           ]}
           value={formik.values.repositoryName}
           onChangeText={formik.handleChange("repositoryName")}
           onBlur={formik.handleBlur("repositoryName")}
         />
-        {checkRepositoryNameValidation && (
+        {repositoryNameValidationError && (
           <Text style={{ color: theme.colors.error }}>
             {formik.errors.repositoryName}
           </Text>
@@ -84,13 +87,13 @@ const CreateReviewForm = ({ createReviewMutation }) => {
           placeholder="Rating 0-100"
           style={[
             styles.textInput,
-            checkRatingValidation && styles.errorBorder,
+            ratingValidationError && styles.errorBorder,
           ]}
           value={formik.values.rating}
           onChangeText={formik.handleChange("rating")}
           onBlur={formik.handleBlur("rating")}
         />
-        {checkRatingValidation && (
+        {ratingValidationError && (
           <Text style={{ color: theme.colors.error }}>
             {formik.errors.rating}
           </Text>
@@ -100,12 +103,12 @@ const CreateReviewForm = ({ createReviewMutation }) => {
         <TextInput
           multiline
           placeholder="Review"
-          style={[styles.textInput, checkTextValidation && styles.errorBorder]}
+          style={[styles.textInput, textValidationError && styles.errorBorder]}
           value={formik.values.text}
           onChangeText={formik.handleChange("text")}
           onBlur={formik.handleBlur("text")}
         />
-        {checkTextValidation && (
+        {textValidationError && (
           <Text style={{ color: theme.colors.error }}>
             {formik.errors.text}
           </Text>
@@ -124,12 +127,20 @@ const CreateReview = () => {
     onCompleted: ({ createReview: { repositoryId } }) => {
       navigate(`/repository/${repositoryId}`);
     },
-    onError: (e) => {
-      console.log(e);
+    onError: (error) => {
+      console.log(error);
     },
   });
 
-  return <CreateReviewForm createReviewMutation={mutate} />;
+  const onCreateReview = async (review) => {
+    const data = await mutate({
+      variables: {
+        review,
+      },
+    });
+  };
+
+  return <CreateReviewForm onCreateReview={onCreateReview} />;
 };
 
 export default CreateReview;

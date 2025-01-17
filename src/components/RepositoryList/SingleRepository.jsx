@@ -44,8 +44,8 @@ const SingleRepository = () => {
     variables: {
       id,
     },
-    onError(e) {
-      console.log(e);
+    onError(error) {
+      console.log(error);
     },
   });
 
