@@ -9,6 +9,10 @@ export const ReviewFragment = gql`
     rating
     createdAt
     text
+    user {
+      username
+      id
+    }
   }
 `;
 
@@ -31,5 +35,14 @@ export const RepositoryFragment = gql`
     description
     language
     userHasReviewed
+  }
+`;
+
+export const UserFragment = gql`
+  fragment UserFragment on User {
+    createdAt
+    id
+    reviewCount
+    username
   }
 `;

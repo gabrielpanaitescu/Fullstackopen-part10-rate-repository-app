@@ -1,37 +1,13 @@
 import { useFormik } from "formik";
 import { Text } from "./ui/Text";
-import { Pressable, StyleSheet, TextInput, View } from "react-native";
+import { Pressable, TextInput, View } from "react-native";
 import theme from "../theme";
 import * as yup from "yup";
 
 import { useNavigate } from "react-router-native";
 import { useAuth } from "../hooks/useAuth";
 
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "white",
-    padding: 14,
-    gap: 10,
-  },
-  textInput: {
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: "#333",
-    paddingHorizontal: 10,
-    borderRadius: theme.borderRadius.general,
-  },
-  submitText: {
-    textAlign: "center",
-    color: "white",
-  },
-  borderColorError: {
-    borderColor: theme.colors.error,
-  },
-  pressable: {
-    borderRadius: theme.borderRadius.general,
-    backgroundColor: theme.colors.primary,
-    paddingVertical: 14,
-  },
-});
+import { formStyles as styles } from "../theme";
 
 const validationSchema = yup.object().shape({
   username: yup.string().required(),
@@ -61,11 +37,12 @@ export const SignInForm = ({ onSignIn }) => {
       <TextInput
         style={[
           styles.textInput,
-          checkUsernameValidation && styles.borderColorError,
+          checkUsernameValidation && styles.errorBorder,
         ]}
         placeholder="Username"
         value={formik.values.username}
         onChangeText={formik.handleChange("username")}
+        onBlur={formik.handleBlur("username")}
       />
       {checkUsernameValidation && (
         <Text style={{ color: theme.colors.error }}>
@@ -75,19 +52,20 @@ export const SignInForm = ({ onSignIn }) => {
       <TextInput
         style={[
           styles.textInput,
-          checkPasswordValidation && styles.borderColorError,
+          checkPasswordValidation && styles.errorBorder,
         ]}
         secureTextEntry
         placeholder="Password"
         value={formik.values.password}
         onChangeText={formik.handleChange("password")}
+        onBlur={formik.handleBlur("password")}
       />
       {checkPasswordValidation && (
         <Text style={{ color: theme.colors.error }}>
           {formik.errors.password}
         </Text>
       )}
-      <Pressable onPress={formik.handleSubmit} style={styles.pressable}>
+      <Pressable onPress={formik.handleSubmit} style={styles.submitPressable}>
         <Text fontWeight="bold" style={styles.submitText}>
           Sign in
         </Text>

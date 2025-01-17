@@ -1,11 +1,12 @@
 import { gql } from "@apollo/client";
+import { UserFragment } from "./fragments";
+import { ReviewFragment } from "./fragments";
 
-const UserFragment = gql`
-  fragment UserFragment on User {
-    createdAt
-    id
-    reviewCount
-    username
+export const CREATE_REVIEW = gql`
+  mutation CreateReview($review: CreateReviewInput) {
+    createReview(review: $review) {
+      repositoryId
+    }
   }
 `;
 

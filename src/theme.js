@@ -1,4 +1,4 @@
-import { Platform } from "react-native";
+import { Platform, StyleSheet } from "react-native";
 
 const theme = {
   colors: {
@@ -29,5 +29,32 @@ const theme = {
     general: 4,
   },
 };
+
+export const formStyles = StyleSheet.create({
+  container: {
+    backgroundColor: "white",
+    padding: 14,
+    gap: 10,
+  },
+  textInput: {
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: "#333",
+    paddingHorizontal: 10,
+    borderRadius: theme.borderRadius.general,
+  },
+  submitText: {
+    textAlign: "center",
+    color: "white",
+  },
+  errorBorder: {
+    borderColor: theme.colors.error,
+    borderWidth: 1,
+  },
+  submitPressable: {
+    borderRadius: theme.borderRadius.general,
+    backgroundColor: theme.colors.primary,
+    paddingVertical: 14,
+  },
+});
 
 export default theme;
