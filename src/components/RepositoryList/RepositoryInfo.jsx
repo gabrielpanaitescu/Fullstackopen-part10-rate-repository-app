@@ -62,7 +62,7 @@ const StatContainer = ({ title, stat, ...props }) => {
   );
 };
 
-export const RepositoryInfo = ({ repository }) => {
+const RepositoryInfo = ({ repository }) => {
   return (
     <View style={styles.container} testID="repositoryItem">
       <View style={styles.rowContainer}>
@@ -74,8 +74,12 @@ export const RepositoryInfo = ({ repository }) => {
         />
         <View style={styles.descriptionContainer}>
           <Text fontWeight="bold">{repository.fullName} </Text>
-          <Text color="textSecondary">{repository.description}</Text>
-          <Text style={styles.languageText}>{repository.language}</Text>
+          <Text color="textSecondary">
+            {repository.description ? repository.description : "No description"}
+          </Text>
+          <Text style={styles.languageText}>
+            {repository.language ? repository.language : "N/A"}
+          </Text>
         </View>
       </View>
 
@@ -102,42 +106,4 @@ export const RepositoryInfo = ({ repository }) => {
   );
 };
 
-export const RepositoryItem = ({ item }) => {
-  return (
-    <View style={styles.container} testID="repositoryItem">
-      <View style={styles.rowContainer}>
-        <Image
-          style={styles.avatar}
-          source={{
-            uri: item.ownerAvatarUrl,
-          }}
-        />
-        <View style={styles.descriptionContainer}>
-          <Text fontWeight="bold">{item.fullName} </Text>
-          <Text color="textSecondary">{item.description}</Text>
-          <Text style={styles.languageText}>{item.language}</Text>
-        </View>
-      </View>
-
-      <View style={styles.statGroupContainer}>
-        <StatContainer
-          title={"Stars"}
-          stat={decimalTransform(item.stargazersCount)}
-        />
-        <StatContainer
-          title={"Forks"}
-          stat={decimalTransform(item.forksCount)}
-        />
-
-        <StatContainer
-          title={"Reviews"}
-          stat={decimalTransform(item.reviewCount)}
-        />
-        <StatContainer
-          title={"Rating"}
-          stat={decimalTransform(item.ratingAverage)}
-        />
-      </View>
-    </View>
-  );
-};
+export default RepositoryInfo;

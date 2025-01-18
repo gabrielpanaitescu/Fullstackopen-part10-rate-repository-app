@@ -2,11 +2,11 @@ import { useQuery } from "@apollo/client";
 import { GET_REPOSITORY_BY } from "../../graphql/queries";
 import { useParams } from "react-router-native";
 import * as Linking from "expo-linking";
-import { RepositoryInfo } from "./RepositoryItem";
+import RepositoryInfo from "./RepositoryInfo";
 import { FlatList, Pressable, StyleSheet, View } from "react-native";
 import { Text } from "../ui/Text";
 import theme from "../../theme";
-import ReviewItem from "./ReviewItem";
+import ReviewInfo from "./ReviewInfo";
 import ItemSeparator from "../ui/ItemSeparator";
 
 const styles = StyleSheet.create({
@@ -64,7 +64,7 @@ const SingleRepository = () => {
       <FlatList
         ItemSeparatorComponent={<ItemSeparator />}
         data={reviews}
-        renderItem={({ item }) => <ReviewItem review={item} />}
+        renderItem={({ item }) => <ReviewInfo review={item} />}
         keyExtractor={(item) => item.id}
         ListHeaderComponent={
           <View style={styles.marginToReview}>

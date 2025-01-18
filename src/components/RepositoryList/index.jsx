@@ -1,5 +1,5 @@
 import { FlatList, View, StyleSheet, Pressable } from "react-native";
-import { RepositoryItem } from "./RepositoryItem";
+import RepositoryInfo from "./RepositoryInfo";
 import theme from "../../theme";
 import { Text } from "../ui/Text";
 import useRepositories, {
@@ -7,8 +7,8 @@ import useRepositories, {
 } from "../../hooks/useRepositories";
 import { useNavigate } from "react-router-native";
 import ItemSeparator from "../ui/ItemSeparator";
-import Menu from "../ui/Menu";
 import { useState } from "react";
+import OrderPicker, { orderOptions } from "../ui/OrderPicker";
 
 const styles = StyleSheet.create({
   container: {
@@ -18,7 +18,11 @@ const styles = StyleSheet.create({
   },
 });
 
-export const RepositoryListContainer = ({ repositories, onChangeOrder }) => {
+export const RepositoryListContainer = ({
+  repositories,
+  selectedOrderOption,
+  setSelectedOrderOption,
+}) => {
   const navigate = useNavigate();
 
   const repositoryNodes = repositories
@@ -31,15 +35,18 @@ export const RepositoryListContainer = ({ repositories, onChangeOrder }) => {
 
   return (
     <View style={styles.container}>
-      <View style={{ height: 40, zIndex: 100 }}>
-        <Menu onChangeOrder={onChangeOrder} />
-      </View>
       <FlatList
+        ListHeaderComponent={
+          <OrderPicker
+            selectedOrderOption={selectedOrderOption}
+            setSelectedOrderOption={setSelectedOrderOption}
+          />
+        }
         data={repositoryNodes}
-        ItemSeparatorComponent={ItemSeparator}
+        ItemSeparatorComponent={<ItemSeparator />}
         renderItem={({ item }) => (
           <Pressable onPress={() => handleNavigateToRepo(item.id)}>
-            <RepositoryItem item={item} />
+            <RepositoryInfo repository={item} />
           </Pressable>
         )}
         ListEmptyComponent={<Text>Loading data...</Text>}
@@ -49,17 +56,17 @@ export const RepositoryListContainer = ({ repositories, onChangeOrder }) => {
 };
 
 const RepositoryList = () => {
-  const [order, setOrder] = useState({ props: null });
-  const { repositories } = useRepositoriesGQL(order);
+  const [selectedOrderOption, setSelectedOrderOption] = useState(
+    orderOptions[0].value
+  );
 
-  const onChangeOrder = ({ orderBy, orderDirection }) => {
-    setOrder({ props: { orderBy, orderDirection } });
-  };
+  const { repositories } = useRepositoriesGQL(selectedOrderOption);
 
   return (
     <RepositoryListContainer
       repositories={repositories}
-      onChangeOrder={onChangeOrder}
+      selectedOrderOption={selectedOrderOption}
+      setSelectedOrderOption={setSelectedOrderOption}
     />
   );
 };

@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const ReviewItem = ({ review }) => {
+const ReviewInfo = ({ review }) => {
   return (
     <View style={styles.mainContainer}>
       <View style={styles.ratingContainer}>
@@ -47,4 +47,4 @@ const ReviewItem = ({ review }) => {
   );
 };
 
-export default ReviewItem;
+export default ReviewInfo;
