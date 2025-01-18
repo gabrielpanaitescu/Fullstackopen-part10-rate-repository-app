@@ -14,10 +14,12 @@ import { useAuth } from "../hooks/useAuth";
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: StatusBar.currentHeight,
+    // alt for SafeAreaProvider + SafeAreaView
+    // paddingTop: StatusBar.currentHeight,
+    paddingBottom: 16,
+    paddingTop: 12,
     backgroundColor: theme.colors.bgAppBar,
-    paddingBottom: 24,
-    paddingHorizontal: 12,
+    paddingHorizontal: 14,
   },
   tabText: {
     color: "white",

@@ -58,6 +58,7 @@ export const SignUpForm = ({ onSignUp }) => {
       </View>
       <View>
         <TextInput
+          secureTextEntry
           value={formik.values.password}
           onChangeText={formik.handleChange("password")}
           onBlur={formik.handleBlur("password")}
@@ -75,6 +76,7 @@ export const SignUpForm = ({ onSignUp }) => {
       </View>
       <View>
         <TextInput
+          secureTextEntry
           value={formik.values.passwordConfirm}
           onChangeText={formik.handleChange("passwordConfirm")}
           onBlur={formik.handleBlur("passwordConfirm")}

@@ -25,9 +25,10 @@ const useRepositories = () => {
 
 export default useRepositories;
 
-export const useRepositoriesGQL = () => {
+export const useRepositoriesGQL = (order) => {
   const { data, error, loading } = useQuery(GET_REPOSITORIES, {
     fetchPolicy: "cache-and-network",
+    variables: order.props ? order.props : null,
   });
 
   const repositories = data?.repositories;

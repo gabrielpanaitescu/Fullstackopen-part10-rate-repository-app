@@ -7,6 +7,8 @@ import useRepositories, {
 } from "../../hooks/useRepositories";
 import { useNavigate } from "react-router-native";
 import ItemSeparator from "../ui/ItemSeparator";
+import Menu from "../ui/Menu";
+import { useState } from "react";
 
 const styles = StyleSheet.create({
   container: {
@@ -16,7 +18,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export const RepositoryListContainer = ({ repositories }) => {
+export const RepositoryListContainer = ({ repositories, onChangeOrder }) => {
   const navigate = useNavigate();
 
   const repositoryNodes = repositories
@@ -29,6 +31,9 @@ export const RepositoryListContainer = ({ repositories }) => {
 
   return (
     <View style={styles.container}>
+      <View style={{ height: 40, zIndex: 100 }}>
+        <Menu onChangeOrder={onChangeOrder} />
+      </View>
       <FlatList
         data={repositoryNodes}
         ItemSeparatorComponent={ItemSeparator}
@@ -44,9 +49,19 @@ export const RepositoryListContainer = ({ repositories }) => {
 };
 
 const RepositoryList = () => {
-  const { repositories } = useRepositoriesGQL();
+  const [order, setOrder] = useState({ props: null });
+  const { repositories } = useRepositoriesGQL(order);
 
-  return <RepositoryListContainer repositories={repositories} />;
+  const onChangeOrder = ({ orderBy, orderDirection }) => {
+    setOrder({ props: { orderBy, orderDirection } });
+  };
+
+  return (
+    <RepositoryListContainer
+      repositories={repositories}
+      onChangeOrder={onChangeOrder}
+    />
+  );
 };
 
 export default RepositoryList;
