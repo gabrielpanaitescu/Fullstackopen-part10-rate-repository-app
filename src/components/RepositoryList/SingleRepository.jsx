@@ -6,7 +6,7 @@ import RepositoryInfo from "./RepositoryInfo";
 import { FlatList, Pressable, StyleSheet, View } from "react-native";
 import { Text } from "../ui/Text";
 import theme from "../../theme";
-import ReviewInfo from "./ReviewInfo";
+import ReviewInfo from "../ReviewInfo";
 import ItemSeparator from "../ui/ItemSeparator";
 
 const styles = StyleSheet.create({

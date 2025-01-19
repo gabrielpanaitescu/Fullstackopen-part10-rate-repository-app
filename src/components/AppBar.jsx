@@ -7,10 +7,11 @@ import {
 } from "react-native";
 import { Text } from "./ui/Text";
 import theme from "../theme";
-import { Link } from "react-router-native";
+import { Link, useLocation, useNavigation } from "react-router-native";
 import { useQuery } from "@apollo/client";
 import { ME } from "../graphql/queries";
 import { useAuth } from "../hooks/useAuth";
+import { useEffect, useState } from "react";
 
 const styles = StyleSheet.create({
   container: {
@@ -43,13 +44,8 @@ const TabText = ({ title }) => {
   );
 };
 
-const AppBar = () => {
-  const { data, loading } = useQuery(ME);
+const AppBar = ({ currentUser, getUserWithReviews }) => {
   const { signOut } = useAuth();
-
-  if (loading) return null;
-
-  const currentUser = data?.me;
 
   return (
     <View style={styles.container}>
@@ -59,9 +55,14 @@ const AppBar = () => {
             <TabText title="Repositories" />
           </Link>
           {currentUser && (
-            <Link to="/create-review">
-              <TabText title="Create Review" />
-            </Link>
+            <>
+              <Link to="/create-review">
+                <TabText title="Create Review" />
+              </Link>
+              <Link to="/my-reviews" onPress={getUserWithReviews}>
+                <TabText title="My reviews" />
+              </Link>
+            </>
           )}
           {!currentUser ? (
             <>

@@ -23,11 +23,20 @@ export const GET_REPOSITORY_BY = gql`
 `;
 
 export const ME = gql`
-  query {
+  query Me($withReviews: Boolean = false) {
     me {
       username
+      reviews @include(if: $withReviews) {
+        edges {
+          node {
+            ...ReviewFragment
+          }
+        }
+      }
     }
   }
+
+  ${ReviewFragment}
 `;
 
 export const GET_REPOSITORIES = gql`

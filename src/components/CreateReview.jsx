@@ -1,10 +1,10 @@
 import { useFormik } from "formik";
 import { Pressable, TextInput, View } from "react-native";
 import * as yup from "yup";
-import theme, { formStyles as styles } from "../../theme";
-import { Text } from "../ui/Text";
+import theme, { formStyles as styles } from "../theme";
+import { Text } from "./ui/Text";
 import { useMutation } from "@apollo/client";
-import { CREATE_REVIEW } from "../../graphql/mutations";
+import { CREATE_REVIEW } from "../graphql/mutations";
 import { useNavigate } from "react-router-native";
 
 export const CreateReviewForm = ({ onCreateReview }) => {
