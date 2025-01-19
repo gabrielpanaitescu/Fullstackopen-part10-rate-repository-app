@@ -7,6 +7,7 @@ export const useCurrentUser = () => {
   const location = useLocation();
   const [withReviews, setWithReviews] = useState(false);
   const { data, loading } = useQuery(ME, {
+    fetchPolicy: "cache-and-network",
     variables: {
       withReviews,
     },

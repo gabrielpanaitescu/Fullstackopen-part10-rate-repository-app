@@ -22,8 +22,6 @@ export const SignUpForm = ({ onSignUp }) => {
         .required("password confirmation is a required field"),
     }),
     onSubmit: ({ passwordConfirm, ...user }) => {
-      console.log(user);
-
       onSignUp(user);
     },
   });

@@ -28,7 +28,8 @@ const styles = StyleSheet.create({
   },
 });
 
-const ReviewInfo = ({ review }) => {
+const ReviewInfo = ({ review, hasRepoNameAsTitle }) => {
+  console.log(review);
   return (
     <View style={styles.mainContainer}>
       <View style={styles.ratingContainer}>
@@ -37,7 +38,11 @@ const ReviewInfo = ({ review }) => {
         </Text>
       </View>
       <View style={styles.descriptionContainer}>
-        <Text fontWeight="bold">{review.user.username}</Text>
+        <Text fontWeight="bold">
+          {hasRepoNameAsTitle
+            ? review.repository.fullName
+            : review.user.username}
+        </Text>
         <Text color="textSecondary">
           {format(review.createdAt, "dd.MM.yyyy")}
         </Text>

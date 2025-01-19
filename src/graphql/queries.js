@@ -30,6 +30,9 @@ export const ME = gql`
         edges {
           node {
             ...ReviewFragment
+            repository {
+              fullName
+            }
           }
         }
       }

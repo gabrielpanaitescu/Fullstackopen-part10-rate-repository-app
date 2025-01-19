@@ -24,12 +24,15 @@ export const useAuth = () => {
 
     const result = await mutate({
       variables: { credentials: { username, password } },
+      onCompleted: () => {
+        apolloClient.resetStore();
+
+        navigate("/");
+      },
     });
-    await authStorage.setAccessToken(result.data.authenticate.accessToken);
 
-    apolloClient.resetStore();
-
-    navigate("/");
+    if (result.data)
+      await authStorage.setAccessToken(result.data.authenticate.accessToken);
 
     return result;
   };

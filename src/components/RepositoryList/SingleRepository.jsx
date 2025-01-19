@@ -39,7 +39,7 @@ const SingleRepository = () => {
   const params = useParams();
   const id = params.id ? params.id : null;
 
-  const { data, loading } = useQuery(GET_REPOSITORY_BY, {
+  const { data, loading: loadingRepositoryData } = useQuery(GET_REPOSITORY_BY, {
     fetchPolicy: "cache-and-network",
     variables: {
       id,
@@ -49,15 +49,15 @@ const SingleRepository = () => {
     },
   });
 
-  if (loading) return null;
-
   const repository = data?.repository;
 
-  const reviews = data?.repository.reviews.edges.map((edge) => edge.node);
+  const reviews = data?.repository.reviews.edges.map((edge) => edge.node) ?? [];
 
   const onOpenUrl = () => {
     Linking.openURL(repository.url);
   };
+
+  if (loadingRepositoryData) return <Text>Loading data</Text>;
 
   return (
     <View style={styles.mainContainer}>
@@ -78,6 +78,7 @@ const SingleRepository = () => {
             </View>
           </View>
         }
+        ListEmptyComponent={<Text>No data found...</Text>}
       />
     </View>
   );

@@ -80,14 +80,12 @@ export const SignInForm = ({ onSignIn }) => {
 
 const SignIn = () => {
   const { signIn } = useAuth();
-  const navigate = useNavigate();
 
   const onSignIn = async (values) => {
     const { username, password } = values;
 
     try {
       const { data } = await signIn({ username, password });
-
       return data;
     } catch (error) {
       console.log("error", error);
