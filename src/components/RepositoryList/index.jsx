@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-native";
 import ItemSeparator from "../ui/ItemSeparator";
 import { useState } from "react";
 import OrderPicker, { orderOptions } from "../ui/OrderPicker";
+import SearchBar from "../ui/SearchBar";
 
 const styles = StyleSheet.create({
   container: {
@@ -20,8 +21,10 @@ const styles = StyleSheet.create({
 
 export const RepositoryListContainer = ({
   repositories,
-  selectedOrderOption,
-  setSelectedOrderOption,
+  loadingRepositoriesData,
+  selectedOrderOptions,
+  setSelectedOrderOptions,
+  setSearchKeyword,
 }) => {
   const navigate = useNavigate();
 
@@ -37,10 +40,13 @@ export const RepositoryListContainer = ({
     <View style={styles.container}>
       <FlatList
         ListHeaderComponent={
-          <OrderPicker
-            selectedOrderOption={selectedOrderOption}
-            setSelectedOrderOption={setSelectedOrderOption}
-          />
+          <View>
+            <SearchBar setSearchKeyword={setSearchKeyword} />
+            <OrderPicker
+              selectedOrderOptions={selectedOrderOptions}
+              setSelectedOrderOptions={setSelectedOrderOptions}
+            />
+          </View>
         }
         data={repositoryNodes}
         ItemSeparatorComponent={<ItemSeparator />}
@@ -49,24 +55,36 @@ export const RepositoryListContainer = ({
             <RepositoryInfo repository={item} />
           </Pressable>
         )}
-        ListEmptyComponent={<Text>Loading data...</Text>}
+        ListEmptyComponent={
+          loadingRepositoriesData ? (
+            <Text>Loading data</Text>
+          ) : (
+            <Text>No data found...</Text>
+          )
+        }
       />
     </View>
   );
 };
 
 const RepositoryList = () => {
-  const [selectedOrderOption, setSelectedOrderOption] = useState(
+  const [selectedOrderOptions, setSelectedOrderOptions] = useState(
     orderOptions[0].value
   );
+  const [searchKeyword, setSearchKeyword] = useState("");
 
-  const { repositories } = useRepositoriesGQL(selectedOrderOption);
+  const { repositories, loading: loadingRepositoriesData } = useRepositoriesGQL(
+    selectedOrderOptions,
+    searchKeyword
+  );
 
   return (
     <RepositoryListContainer
       repositories={repositories}
-      selectedOrderOption={selectedOrderOption}
-      setSelectedOrderOption={setSelectedOrderOption}
+      loadingRepositoriesData={loadingRepositoriesData}
+      selectedOrderOptions={selectedOrderOptions}
+      setSelectedOrderOptions={setSelectedOrderOptions}
+      setSearchKeyword={setSearchKeyword}
     />
   );
 };

@@ -22,14 +22,14 @@ export const orderOptions = [
 ];
 
 export const OrderPicker = ({
-  selectedOrderOption,
-  setSelectedOrderOption,
+  selectedOrderOptions,
+  setSelectedOrderOptions,
 }) => {
   return (
     <Picker
-      selectedValue={selectedOrderOption}
+      selectedValue={selectedOrderOptions}
       onValueChange={(value) => {
-        setSelectedOrderOption(value);
+        setSelectedOrderOptions(value);
       }}
     >
       <Picker.Item

@@ -25,10 +25,10 @@ const useRepositories = () => {
 
 export default useRepositories;
 
-export const useRepositoriesGQL = (orderOptions) => {
+export const useRepositoriesGQL = (orderOptions, searchKeyword) => {
   const { data, error, loading } = useQuery(GET_REPOSITORIES, {
     fetchPolicy: "cache-and-network",
-    variables: orderOptions,
+    variables: { ...orderOptions, searchKeyword },
   });
 
   const repositories = data?.repositories;
