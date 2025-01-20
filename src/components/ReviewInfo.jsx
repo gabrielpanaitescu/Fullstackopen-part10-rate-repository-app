@@ -29,7 +29,6 @@ const styles = StyleSheet.create({
 });
 
 const ReviewInfo = ({ review, hasRepoNameAsTitle }) => {
-  console.log(review);
   return (
     <View style={styles.mainContainer}>
       <View style={styles.ratingContainer}>

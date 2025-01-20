@@ -25,11 +25,24 @@ const useRepositories = () => {
 
 export default useRepositories;
 
-export const useRepositoriesGQL = (orderOptions, searchKeyword) => {
-  const { data, error, loading } = useQuery(GET_REPOSITORIES, {
+export const useRepositoriesGQL = (variables) => {
+  const { data, error, loading, fetchMore } = useQuery(GET_REPOSITORIES, {
     fetchPolicy: "cache-and-network",
-    variables: { ...orderOptions, searchKeyword },
+    variables,
   });
+
+  const handleFetchMore = () => {
+    const canFetchMore = !loading && data?.repositories.pageInfo.hasNextPage;
+
+    if (!canFetchMore) return;
+
+    fetchMore({
+      variables: {
+        ...variables,
+        after: data.repositories.pageInfo.endCursor,
+      },
+    });
+  };
 
   const repositories = data?.repositories;
 
@@ -37,5 +50,6 @@ export const useRepositoriesGQL = (orderOptions, searchKeyword) => {
     repositories,
     error,
     loading,
+    handleFetchMore,
   };
 };

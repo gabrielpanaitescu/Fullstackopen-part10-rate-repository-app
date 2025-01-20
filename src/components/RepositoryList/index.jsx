@@ -25,6 +25,7 @@ export const RepositoryListContainer = ({
   selectedOrderOptions,
   setSelectedOrderOptions,
   setSearchKeyword,
+  handleFetchMore,
 }) => {
   const navigate = useNavigate();
 
@@ -36,9 +37,14 @@ export const RepositoryListContainer = ({
     navigate(`/repository/${id}`);
   };
 
+  const handleEndReached = () => {
+    handleFetchMore();
+  };
+
   return (
     <View style={styles.container}>
       <FlatList
+        onEndReached={handleEndReached}
         ListHeaderComponent={
           <View>
             <SearchBar setSearchKeyword={setSearchKeyword} />
@@ -73,10 +79,11 @@ const RepositoryList = () => {
   );
   const [searchKeyword, setSearchKeyword] = useState("");
 
-  const { repositories, loading: loadingRepositoriesData } = useRepositoriesGQL(
-    selectedOrderOptions,
-    searchKeyword
-  );
+  const {
+    handleFetchMore,
+    repositories,
+    loading: loadingRepositoriesData,
+  } = useRepositoriesGQL({ ...selectedOrderOptions, searchKeyword, first: 5 });
 
   return (
     <RepositoryListContainer
@@ -85,6 +92,7 @@ const RepositoryList = () => {
       selectedOrderOptions={selectedOrderOptions}
       setSelectedOrderOptions={setSelectedOrderOptions}
       setSearchKeyword={setSearchKeyword}
+      handleFetchMore={handleFetchMore}
     />
   );
 };

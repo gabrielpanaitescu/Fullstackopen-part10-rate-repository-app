@@ -8,6 +8,7 @@ import { Text } from "../ui/Text";
 import theme from "../../theme";
 import ReviewInfo from "../ReviewInfo";
 import ItemSeparator from "../ui/ItemSeparator";
+import { useRepository } from "../../hooks/useRepository";
 
 const styles = StyleSheet.create({
   openUrlText: {
@@ -39,15 +40,16 @@ const SingleRepository = () => {
   const params = useParams();
   const id = params.id ? params.id : null;
 
-  const { data, loading: loadingRepositoryData } = useQuery(GET_REPOSITORY_BY, {
-    fetchPolicy: "cache-and-network",
-    variables: {
-      id,
-    },
-    onError(error) {
-      console.log(error);
-    },
-  });
+  const variables = {
+    id,
+    first: 6,
+  };
+
+  const {
+    data,
+    loading: loadingRepositoryData,
+    handleFetchMore,
+  } = useRepository(variables);
 
   const repository = data?.repository;
 
@@ -57,11 +59,16 @@ const SingleRepository = () => {
     Linking.openURL(repository.url);
   };
 
+  const handleEndReached = () => {
+    handleFetchMore();
+  };
+
   if (loadingRepositoryData) return <Text>Loading data</Text>;
 
   return (
     <View style={styles.mainContainer}>
       <FlatList
+        onEndReached={handleEndReached}
         ItemSeparatorComponent={<ItemSeparator />}
         data={reviews}
         renderItem={({ item }) => <ReviewInfo review={item} />}

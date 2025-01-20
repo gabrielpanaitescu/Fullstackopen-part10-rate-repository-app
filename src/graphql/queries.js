@@ -2,11 +2,19 @@ import { gql } from "@apollo/client";
 import { RepositoryFragment, ReviewFragment } from "./fragments";
 
 export const GET_REPOSITORY_BY = gql`
-  query GetRepositoryBy($id: ID!) {
+  query GetRepositoryBy($id: ID!, $first: Int, $after: String) {
     repository(id: $id) {
       ...RepositoryFragment
-      reviews {
+      reviews(first: $first, after: $after) {
+        totalCount
+        pageInfo {
+          hasNextPage
+          hasPreviousPage
+          endCursor
+          startCursor
+        }
         edges {
+          cursor
           node {
             ...ReviewFragment
             user {
@@ -47,11 +55,15 @@ export const GET_REPOSITORIES = gql`
     $orderBy: AllRepositoriesOrderBy
     $orderDirection: OrderDirection
     $searchKeyword: String
+    $after: String
+    $first: Int
   ) {
     repositories(
       orderBy: $orderBy
       orderDirection: $orderDirection
       searchKeyword: $searchKeyword
+      after: $after
+      first: $first
     ) {
       totalCount
       pageInfo {

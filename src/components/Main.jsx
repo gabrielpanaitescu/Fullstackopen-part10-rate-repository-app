@@ -6,8 +6,6 @@ import SingleRepository from "./RepositoryList/SingleRepository";
 import ReviewForm from "./CreateReview";
 import SignUp from "./SignUp";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-import { StatusBar } from "react-native";
-import theme from "../theme";
 import UserReviews from "./UserReviews";
 import { useCurrentUser } from "../hooks/useCurrentUser";
 
@@ -20,11 +18,7 @@ const Main = () => {
 
   return (
     <SafeAreaProvider>
-      <SafeAreaView>
-        <StatusBar
-          backgroundColor={theme.colors.bgAppBar}
-          barStyle="light-content"
-        />
+      <SafeAreaView style={{ paddingBottom: 20 }}>
         <AppBar
           currentUser={currentUser}
           getUserWithReviews={getUserWithReviews}

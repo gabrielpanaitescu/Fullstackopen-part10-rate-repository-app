@@ -17,10 +17,10 @@ const styles = StyleSheet.create({
   container: {
     // alt for SafeAreaProvider + SafeAreaView
     // paddingTop: StatusBar.currentHeight,
-    paddingBottom: 16,
-    paddingTop: 12,
+
     backgroundColor: theme.colors.bgAppBar,
     paddingHorizontal: 14,
+    paddingBottom: 10,
   },
   tabText: {
     color: "white",
