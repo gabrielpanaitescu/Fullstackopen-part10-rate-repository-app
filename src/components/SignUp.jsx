@@ -1,96 +1,49 @@
-import { useFormik } from "formik";
+import { Formik } from "formik";
 import * as yup from "yup";
-import theme, { formStyles as styles } from "../theme";
-import { Pressable, Text, TextInput, View } from "react-native";
+import { formStyles as styles } from "../theme";
+import { Alert, Pressable, Text, View } from "react-native";
 import { useMutation } from "@apollo/client";
 import { CREATE_USER } from "../graphql/mutations";
 import { useAuth } from "../hooks/useAuth";
+import FormikTextInput from "./ui/FormikTextInput";
+import { useState } from "react";
 
-export const SignUpForm = ({ onSignUp }) => {
-  const formik = useFormik({
-    initialValues: {
-      username: "",
-      password: "",
-      passwordConfirm: "",
-    },
-    validationSchema: yup.object({
-      username: yup.string().required().min(5).max(30),
-      password: yup.string().required().min(5).max(30),
-      passwordConfirm: yup
-        .string()
-        .oneOf([yup.ref("password")], "value does not match the password field")
-        .required("password confirmation is a required field"),
-    }),
-    onSubmit: ({ passwordConfirm, ...user }) => {
-      onSignUp(user);
-    },
-  });
+const validationSchema = yup.object({
+  username: yup.string().required().min(5).max(30),
+  password: yup.string().required().min(5).max(30),
+  passwordConfirm: yup
+    .string()
+    .oneOf([yup.ref("password")], "value does not match the password field")
+    .required("password confirmation is a required field"),
+});
 
-  const usernameValidationError =
-    formik.touched.username && formik.errors.username;
+const initialValues = {
+  username: "",
+  password: "",
+  passwordConfirm: "",
+};
 
-  const passwordValidationError =
-    formik.touched.password && formik.errors.password;
-
-  const passwordConfirmValidationError =
-    formik.touched.passwordConfirm && formik.errors.passwordConfirm;
-
+export const SignUpForm = ({ handleSubmit }) => {
   return (
     <View style={styles.container}>
       <View>
-        <TextInput
-          value={formik.values.username}
-          onChangeText={formik.handleChange("username")}
-          onBlur={formik.handleBlur("username")}
-          style={[
-            styles.textInput,
-            usernameValidationError && styles.errorBorder,
-          ]}
-          placeholder="Username"
-        />
-        {usernameValidationError && (
-          <Text style={{ color: theme.colors.error }}>
-            {formik.errors.username}
-          </Text>
-        )}
+        <FormikTextInput name={"username"} placeholder="Username" />
       </View>
       <View>
-        <TextInput
-          secureTextEntry
-          value={formik.values.password}
-          onChangeText={formik.handleChange("password")}
-          onBlur={formik.handleBlur("password")}
-          style={[
-            styles.textInput,
-            passwordValidationError && styles.errorBorder,
-          ]}
+        <FormikTextInput
+          name={"password"}
           placeholder="Password"
+          secureTextEntry
         />
-        {passwordValidationError && (
-          <Text style={{ color: theme.colors.error }}>
-            {formik.errors.password}
-          </Text>
-        )}
       </View>
       <View>
-        <TextInput
+        <FormikTextInput
+          name={"passwordConfirm"}
+          placeholder="Confirm passoword"
           secureTextEntry
-          value={formik.values.passwordConfirm}
-          onChangeText={formik.handleChange("passwordConfirm")}
-          onBlur={formik.handleBlur("passwordConfirm")}
-          style={[
-            styles.textInput,
-            passwordConfirmValidationError && styles.errorBorder,
-          ]}
-          placeholder="Confirm password"
         />
-        {passwordConfirmValidationError && (
-          <Text style={{ color: theme.colors.error }}>
-            {formik.errors.passwordConfirm}
-          </Text>
-        )}
       </View>
-      <Pressable onPress={formik.handleSubmit} style={styles.submitPressable}>
+      <Pressable onPress={handleSubmit} style={styles.submitPressable}>
         <Text style={styles.submitText}>Sign up</Text>
       </Pressable>
     </View>
@@ -100,6 +53,7 @@ export const SignUpForm = ({ onSignUp }) => {
 const SignUp = () => {
   const [mutate] = useMutation(CREATE_USER);
   const { signIn } = useAuth();
+  const [errorMessage, setErrorMessage] = useState(null);
 
   const onSignUp = (user) => {
     mutate({
@@ -107,6 +61,11 @@ const SignUp = () => {
         user,
       },
       onError: (error) => {
+        if (!error.message) {
+          setErrorMessage("Unknown error");
+        } else {
+          setErrorMessage(error.message);
+        }
         console.log(error);
       },
       onCompleted: (_createdUser) => {
@@ -115,7 +74,26 @@ const SignUp = () => {
     });
   };
 
-  return <SignUpForm onSignUp={onSignUp} />;
+  const createErrorAlert = (message) => {
+    setErrorMessage(null);
+    return Alert.alert("Error!", message);
+  };
+
+  return (
+    <>
+      <Formik
+        initialValues={initialValues}
+        onSubmit={({ passwordConfirm, ...user }) => {
+          onSignUp(user);
+        }}
+        validationSchema={validationSchema}
+      >
+        {({ handleSubmit }) => <SignUpForm handleSubmit={handleSubmit} />}
+      </Formik>
+
+      {errorMessage && createErrorAlert(errorMessage)}
+    </>
+  );
 };
 
 export default SignUp;

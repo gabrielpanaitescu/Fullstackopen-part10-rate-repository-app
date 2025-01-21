@@ -1,122 +1,55 @@
-import { useFormik } from "formik";
-import { Pressable, TextInput, View } from "react-native";
+import { Formik } from "formik";
+import { Pressable, View } from "react-native";
 import * as yup from "yup";
-import theme, { formStyles as styles } from "../theme";
+import { formStyles as styles } from "../theme";
 import { Text } from "./ui/Text";
 import { useMutation } from "@apollo/client";
 import { CREATE_REVIEW } from "../graphql/mutations";
 import { useNavigate } from "react-router-native";
 import { Alert } from "react-native";
 import { useState } from "react";
+import FormikTextInput from "./ui/FormikTextInput";
 
-export const CreateReviewForm = ({ onCreateReview }) => {
-  const formik = useFormik({
-    initialValues: {
-      ownerName: "",
-      repositoryName: "",
-      rating: "",
-      text: "",
-    },
-    validationSchema: yup.object({
-      ownerName: yup.string().required("owner's name is a required field"),
-      repositoryName: yup
-        .string()
-        .required("repository's name is a required field"),
-      rating: yup
-        .number()
-        .required()
-        .integer()
-        .min(0)
-        .max(100, "Rating must be a number between 0 and 100"),
-      text: yup.string(),
-    }),
-    onSubmit: (values) => {
-      const review = {
-        ...values,
-        rating: Number(values.rating),
-      };
+const validationSchema = yup.object({
+  ownerName: yup.string().required("owner's name is a required field"),
+  repositoryName: yup
+    .string()
+    .required("repository's name is a required field"),
+  rating: yup
+    .number()
+    .required()
+    .integer()
+    .min(0)
+    .max(100, "Rating must be a number between 0 and 100"),
+  text: yup.string(),
+});
+const initialValues = {
+  ownerName: "",
+  repositoryName: "",
+  rating: "",
+  text: "",
+};
 
-      onCreateReview(review);
-    },
-  });
-
-  const ownerNameValidationError =
-    formik.touched.ownerName && formik.errors.ownerName;
-  const repositoryNameValidationError =
-    formik.touched.repositoryName && formik.errors.repositoryName;
-  const ratingValidationError = formik.touched.rating && formik.errors.rating;
-  const textValidationError = formik.touched.text && formik.errors.text;
-
+export const CreateReviewForm = ({ handleSubmit }) => {
   return (
     <View style={styles.container}>
       <View>
-        <TextInput
-          placeholder="Repository owner name"
-          style={[
-            styles.textInput,
-            ownerNameValidationError && styles.errorBorder,
-          ]}
-          value={formik.values.ownerName}
-          onChangeText={formik.handleChange("ownerName")}
-          onBlur={formik.handleBlur("ownerName")}
-        />
-        {ownerNameValidationError && (
-          <Text style={{ color: theme.colors.error }}>
-            {formik.errors.ownerName}
-          </Text>
-        )}
+        <FormikTextInput name="ownerName" placeholder="Repository owner name" />
       </View>
       <View>
-        <TextInput
-          placeholder="Repository name"
-          style={[
-            styles.textInput,
-            repositoryNameValidationError && styles.errorBorder,
-          ]}
-          value={formik.values.repositoryName}
-          onChangeText={formik.handleChange("repositoryName")}
-          onBlur={formik.handleBlur("repositoryName")}
-        />
-        {repositoryNameValidationError && (
-          <Text style={{ color: theme.colors.error }}>
-            {formik.errors.repositoryName}
-          </Text>
-        )}
+        <FormikTextInput name="repositoryName" placeholder="Repository name" />
       </View>
       <View>
-        <TextInput
+        <FormikTextInput
           keyboardType="numeric"
+          name="rating"
           placeholder="Rating 0-100"
-          style={[
-            styles.textInput,
-            ratingValidationError && styles.errorBorder,
-          ]}
-          value={formik.values.rating}
-          onChangeText={formik.handleChange("rating")}
-          onBlur={formik.handleBlur("rating")}
         />
-        {ratingValidationError && (
-          <Text style={{ color: theme.colors.error }}>
-            {formik.errors.rating}
-          </Text>
-        )}
       </View>
       <View>
-        <TextInput
-          multiline
-          placeholder="Review"
-          style={[styles.textInput, textValidationError && styles.errorBorder]}
-          value={formik.values.text}
-          onChangeText={formik.handleChange("text")}
-          onBlur={formik.handleBlur("text")}
-        />
-        {textValidationError && (
-          <Text style={{ color: theme.colors.error }}>
-            {formik.errors.text}
-          </Text>
-        )}
+        <FormikTextInput multiline name="text" placeholder="Review" />
       </View>
-      <Pressable onPress={formik.handleSubmit} style={styles.submitPressable}>
+      <Pressable onPress={handleSubmit} style={styles.submitPressable}>
         <Text style={styles.submitText}>Submit</Text>
       </Pressable>
     </View>
@@ -154,7 +87,21 @@ const CreateReview = () => {
 
   return (
     <>
-      <CreateReviewForm onCreateReview={onCreateReview} />
+      <Formik
+        initialValues={initialValues}
+        onSubmit={(values) => {
+          const review = {
+            ...values,
+            rating: Number(values.rating),
+          };
+
+          onCreateReview(review);
+        }}
+        validationSchema={validationSchema}
+      >
+        {({ handleSubmit }) => <CreateReviewForm handleSubmit={handleSubmit} />}
+      </Formik>
+
       {errorMessage && createErrorAlert(errorMessage)}
     </>
   );

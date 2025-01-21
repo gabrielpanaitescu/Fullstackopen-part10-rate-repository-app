@@ -36,8 +36,6 @@ const TabText = ({ title }) => {
 };
 
 const AppBar = ({ currentUser, getUserWithReviews }) => {
-  console.log("currentUser", currentUser);
-
   const { signOut } = useAuth();
 
   return (
