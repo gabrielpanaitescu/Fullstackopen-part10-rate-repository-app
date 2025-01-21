@@ -14,11 +14,11 @@ const Main = () => {
 
   if (loading) return null;
 
-  const currentUser = data.me;
+  const currentUser = data?.me;
 
   return (
     <SafeAreaProvider>
-      <SafeAreaView style={{ paddingBottom: 20 }}>
+      <SafeAreaView style={{ marginBottom: 35 }}>
         <AppBar
           currentUser={currentUser}
           getUserWithReviews={getUserWithReviews}

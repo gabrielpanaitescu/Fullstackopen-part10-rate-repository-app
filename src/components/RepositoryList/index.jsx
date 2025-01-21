@@ -17,6 +17,10 @@ const styles = StyleSheet.create({
     flexShrink: 1,
     backgroundColor: theme.colors.bgMain,
   },
+  emptyText: {
+    padding: 10,
+    fontStyle: "italic",
+  },
 });
 
 export const RepositoryListContainer = ({
@@ -63,9 +67,9 @@ export const RepositoryListContainer = ({
         )}
         ListEmptyComponent={
           loadingRepositoriesData ? (
-            <Text>Loading data</Text>
+            <Text style={styles.emptyText}>Loading data...</Text>
           ) : (
-            <Text>No data found...</Text>
+            <Text style={styles.emptyText}>No data found...</Text>
           )
         }
       />

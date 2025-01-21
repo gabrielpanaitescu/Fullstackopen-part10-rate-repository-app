@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
 
     backgroundColor: theme.colors.bgAppBar,
     paddingHorizontal: 14,
-    paddingBottom: 10,
+    paddingVertical: 10,
   },
   tabText: {
     color: "white",

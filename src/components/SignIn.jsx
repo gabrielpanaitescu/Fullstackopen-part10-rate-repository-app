@@ -1,13 +1,12 @@
 import { useFormik } from "formik";
 import { Text } from "./ui/Text";
-import { Pressable, TextInput, View } from "react-native";
+import { Alert, Pressable, TextInput, View } from "react-native";
 import theme from "../theme";
 import * as yup from "yup";
-
-import { useNavigate } from "react-router-native";
 import { useAuth } from "../hooks/useAuth";
 
 import { formStyles as styles } from "../theme";
+import { useState } from "react";
 
 const validationSchema = yup.object().shape({
   username: yup.string().required(),
@@ -80,19 +79,36 @@ export const SignInForm = ({ onSignIn }) => {
 
 const SignIn = () => {
   const { signIn } = useAuth();
+  const [errorMessage, setErrorMessage] = useState(null);
 
   const onSignIn = async (values) => {
     const { username, password } = values;
 
     try {
       const { data } = await signIn({ username, password });
+
       return data;
     } catch (error) {
+      if (!error.message) {
+        setErrorMessage("Unknown error");
+      } else {
+        setErrorMessage(error.message);
+      }
       console.log("error", error);
     }
   };
 
-  return <SignInForm onSignIn={onSignIn} />;
+  const createErrorAlert = (message) => {
+    setErrorMessage(null);
+    return Alert.alert("Error!", message);
+  };
+
+  return (
+    <>
+      <SignInForm onSignIn={onSignIn} />
+      {errorMessage && createErrorAlert(errorMessage)}
+    </>
+  );
 };
 
 export default SignIn;

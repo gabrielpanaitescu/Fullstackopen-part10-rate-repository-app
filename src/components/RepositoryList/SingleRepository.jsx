@@ -1,5 +1,3 @@
-import { useQuery } from "@apollo/client";
-import { GET_REPOSITORY_BY } from "../../graphql/queries";
 import { useParams } from "react-router-native";
 import * as Linking from "expo-linking";
 import RepositoryInfo from "./RepositoryInfo";
@@ -34,6 +32,10 @@ const styles = StyleSheet.create({
   marginToReview: {
     marginBottom: 10,
   },
+  emptyText: {
+    padding: 10,
+    fontStyle: "italic",
+  },
 });
 
 const SingleRepository = () => {
@@ -63,7 +65,8 @@ const SingleRepository = () => {
     handleFetchMore();
   };
 
-  if (loadingRepositoryData) return <Text>Loading data</Text>;
+  if (loadingRepositoryData)
+    return <Text style={styles.emptyText}>Loading data...</Text>;
 
   return (
     <View style={styles.mainContainer}>
@@ -85,7 +88,9 @@ const SingleRepository = () => {
             </View>
           </View>
         }
-        ListEmptyComponent={<Text>No data found...</Text>}
+        ListEmptyComponent={
+          <Text style={styles.emptyText}>No data found...</Text>
+        }
       />
     </View>
   );

@@ -6,6 +6,8 @@ import { Text } from "./ui/Text";
 import { useMutation } from "@apollo/client";
 import { CREATE_REVIEW } from "../graphql/mutations";
 import { useNavigate } from "react-router-native";
+import { Alert } from "react-native";
+import { useState } from "react";
 
 export const CreateReviewForm = ({ onCreateReview }) => {
   const formik = useFormik({
@@ -123,24 +125,39 @@ export const CreateReviewForm = ({ onCreateReview }) => {
 
 const CreateReview = () => {
   const navigate = useNavigate();
-  const [mutate] = useMutation(CREATE_REVIEW, {
-    onCompleted: ({ createReview: { repositoryId } }) => {
-      navigate(`/repository/${repositoryId}`);
-    },
-    onError: (error) => {
-      console.log(error);
-    },
-  });
+  const [mutate] = useMutation(CREATE_REVIEW);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   const onCreateReview = async (review) => {
     const data = await mutate({
       variables: {
         review,
       },
+      onCompleted: ({ createReview: { repositoryId } }) => {
+        navigate(`/repository/${repositoryId}`);
+      },
+      onError: (error) => {
+        if (!error.message) {
+          setErrorMessage("Unknown error");
+        } else {
+          setErrorMessage(error.message);
+        }
+        console.log(error);
+      },
     });
   };
 
-  return <CreateReviewForm onCreateReview={onCreateReview} />;
+  const createErrorAlert = (message) => {
+    setErrorMessage(null);
+    return Alert.alert("Error!", message);
+  };
+
+  return (
+    <>
+      <CreateReviewForm onCreateReview={onCreateReview} />
+      {errorMessage && createErrorAlert(errorMessage)}
+    </>
+  );
 };
 
 export default CreateReview;
