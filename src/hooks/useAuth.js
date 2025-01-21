@@ -29,8 +29,6 @@ export const useAuth = () => {
       },
     });
 
-    console.log(result);
-
     if (result.data?.authenticate) {
       await authStorage.setAccessToken(result.data.authenticate.accessToken);
       apolloClient.resetStore();

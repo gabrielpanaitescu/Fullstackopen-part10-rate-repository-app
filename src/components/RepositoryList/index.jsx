@@ -33,9 +33,7 @@ export const RepositoryListContainer = ({
 }) => {
   const navigate = useNavigate();
 
-  const repositoryNodes = repositories
-    ? repositories.edges.map((edge) => edge.node)
-    : [];
+  const repositoryNodes = repositories?.edges.map((edge) => edge.node) ?? [];
 
   const handleNavigateToRepo = (id) => {
     navigate(`/repository/${id}`);
@@ -85,9 +83,11 @@ const RepositoryList = () => {
 
   const {
     handleFetchMore,
-    repositories,
+    data,
     loading: loadingRepositoriesData,
   } = useRepositoriesGQL({ ...selectedOrderOptions, searchKeyword, first: 5 });
+
+  const repositories = data?.repositories;
 
   return (
     <RepositoryListContainer

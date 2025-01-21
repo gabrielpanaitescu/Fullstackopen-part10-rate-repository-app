@@ -55,7 +55,8 @@ const SingleRepository = () => {
 
   const repository = data?.repository;
 
-  const reviews = data?.repository.reviews.edges.map((edge) => edge.node) ?? [];
+  const reviews =
+    data?.repository?.reviews?.edges.map((edge) => edge.node) ?? [];
 
   const onOpenUrl = () => {
     Linking.openURL(repository.url);
@@ -65,8 +66,7 @@ const SingleRepository = () => {
     handleFetchMore();
   };
 
-  if (loadingRepositoryData)
-    return <Text style={styles.emptyText}>Loading data...</Text>;
+  if (loadingRepositoryData) return null;
 
   return (
     <View style={styles.mainContainer}>
@@ -77,16 +77,18 @@ const SingleRepository = () => {
         renderItem={({ item }) => <ReviewInfo review={item} />}
         keyExtractor={(item) => item.id}
         ListHeaderComponent={
-          <View style={styles.marginToReview}>
-            <RepositoryInfo repository={repository} />
-            <View style={styles.pressableContainer}>
-              <Pressable onPress={onOpenUrl} style={styles.openUrlPressable}>
-                <Text fontWeight="bold" style={styles.openUrlText}>
-                  Open in GitHub
-                </Text>
-              </Pressable>
+          repository && (
+            <View style={styles.marginToReview}>
+              <RepositoryInfo repository={repository} />
+              <View style={styles.pressableContainer}>
+                <Pressable onPress={onOpenUrl} style={styles.openUrlPressable}>
+                  <Text fontWeight="bold" style={styles.openUrlText}>
+                    Open in GitHub
+                  </Text>
+                </Pressable>
+              </View>
             </View>
-          </View>
+          )
         }
         ListEmptyComponent={
           <Text style={styles.emptyText}>No data found...</Text>

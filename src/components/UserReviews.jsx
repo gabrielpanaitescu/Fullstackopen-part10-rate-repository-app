@@ -24,6 +24,10 @@ const styles = StyleSheet.create({
   deleteReviewPressable: {
     backgroundColor: theme.colors.error,
   },
+  emptyText: {
+    padding: 10,
+    fontStyle: "italic",
+  },
 });
 
 const ReviewContainer = ({ review, children }) => {
@@ -80,6 +84,13 @@ const ReviewContainer = ({ review, children }) => {
 };
 
 const UserReviews = ({ currentUser }) => {
+  if (!currentUser)
+    return (
+      <Text style={styles.emptyText}>
+        Could not load user data. Please try signing in again
+      </Text>
+    );
+
   const reviews = currentUser.reviews?.edges.map((edge) => edge.node) ?? [];
 
   return (
@@ -91,7 +102,9 @@ const UserReviews = ({ currentUser }) => {
         </ReviewContainer>
       )}
       keyExtractor={(item) => item.id}
-      ListEmptyComponent={<Text>No reviews given yet</Text>}
+      ListEmptyComponent={
+        <Text style={styles.emptyText}>No reviews given yet</Text>
+      }
     />
   );
 };

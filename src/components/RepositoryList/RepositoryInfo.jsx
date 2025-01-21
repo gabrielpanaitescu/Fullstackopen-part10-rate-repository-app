@@ -63,8 +63,6 @@ const StatContainer = ({ title, stat, ...props }) => {
 };
 
 const RepositoryInfo = ({ repository }) => {
-  if (!repository) return null;
-
   return (
     <View style={styles.container} testID="repositoryItem">
       <View style={styles.rowContainer}>

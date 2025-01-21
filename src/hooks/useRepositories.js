@@ -44,10 +44,8 @@ export const useRepositoriesGQL = (variables) => {
     });
   };
 
-  const repositories = data?.repositories;
-
   return {
-    repositories,
+    data,
     error,
     loading,
     handleFetchMore,

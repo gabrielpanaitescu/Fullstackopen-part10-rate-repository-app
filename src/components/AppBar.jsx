@@ -1,17 +1,8 @@
-import {
-  View,
-  StyleSheet,
-  StatusBar,
-  ScrollView,
-  Pressable,
-} from "react-native";
+import { View, StyleSheet, ScrollView, Pressable } from "react-native";
 import { Text } from "./ui/Text";
 import theme from "../theme";
-import { Link, useLocation, useNavigation } from "react-router-native";
-import { useQuery } from "@apollo/client";
-import { ME } from "../graphql/queries";
+import { Link } from "react-router-native";
 import { useAuth } from "../hooks/useAuth";
-import { useEffect, useState } from "react";
 
 const styles = StyleSheet.create({
   container: {
@@ -45,6 +36,8 @@ const TabText = ({ title }) => {
 };
 
 const AppBar = ({ currentUser, getUserWithReviews }) => {
+  console.log("currentUser", currentUser);
+
   const { signOut } = useAuth();
 
   return (
