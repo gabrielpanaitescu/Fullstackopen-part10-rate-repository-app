@@ -16,7 +16,7 @@ export const useAuth = () => {
 
     apolloClient.resetStore();
 
-    navigate("/");
+    navigate("/", { replace: true });
   };
 
   const signIn = async (credentials) => {
@@ -25,14 +25,16 @@ export const useAuth = () => {
     const result = await mutate({
       variables: { credentials: { username, password } },
       onCompleted: () => {
-        apolloClient.resetStore();
-
-        navigate("/");
+        navigate("/", { replace: true });
       },
     });
 
-    if (result.data)
+    console.log(result);
+
+    if (result.data?.authenticate) {
       await authStorage.setAccessToken(result.data.authenticate.accessToken);
+      apolloClient.resetStore();
+    }
 
     return result;
   };
